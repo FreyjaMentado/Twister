@@ -11,7 +11,8 @@ var terrain_belt: Array[MeshInstance3D] = []
 func _ready() -> void:
 	_load_terrain_scenes(terrian_blocks_path)
 	_init_blocks(num_terrain_blocks)
-	player.nearMiss.connect(speed_up)
+	player.startBoost.connect(speed_up)
+	player.stopBoost.connect(slow_down)
 	player.healthChanged.connect(slow_down)
 
 func _physics_process(delta: float) -> void:
@@ -52,7 +53,7 @@ func _load_terrain_scenes(target_path: String) -> void:
 
 func speed_up():
 	if terrain_velocity < 20:
-		terrain_velocity += 1
+		terrain_velocity += 5
 		print("TV: ", terrain_velocity)
 
 func slow_down():
