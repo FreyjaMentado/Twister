@@ -4,6 +4,9 @@ class_name TerrainController
 var TerrainBlocks: Array = []
 var terrain_belt: Array[MeshInstance3D] = []
 @export var terrain_velocity: float = 10.0
+@export var max_terrain_velocity: float = 20.0
+@export var max_boost_velocity: float = 25.0
+@export var min_terrain_velocity: float = 10.0
 @export var num_terrain_blocks = 5
 @export_dir var terrian_blocks_path = "res://terrain_blocks"
 @export var player: CharacterBody3D
@@ -11,9 +14,9 @@ var terrain_belt: Array[MeshInstance3D] = []
 func _ready() -> void:
 	_load_terrain_scenes(terrian_blocks_path)
 	_init_blocks(num_terrain_blocks)
-	player.startBoost.connect(speed_up)
-	player.stopBoost.connect(slow_down)
-	player.healthChanged.connect(slow_down)
+	player.startBoost.connect(boost)
+	player.stopBoost.connect(reset_speed)
+	player.healthChanged.connect(reset_speed)
 
 func _physics_process(delta: float) -> void:
 	_progress_terrain(delta)
@@ -51,12 +54,10 @@ func _load_terrain_scenes(target_path: String) -> void:
 		print("Loading terrian block scene: " + target_path + "/" + scene_path)
 		TerrainBlocks.append(load(target_path + "/" + scene_path))
 
-func speed_up():
-	if terrain_velocity < 20:
+func boost():
+	if terrain_velocity < max_boost_velocity:
 		terrain_velocity += 5
-		print("TV: ", terrain_velocity)
 
-func slow_down():
-	if terrain_velocity > 10:
-		terrain_velocity = 10
-		print("TV: ", terrain_velocity)
+func reset_speed():
+	if terrain_velocity > min_terrain_velocity:
+		terrain_velocity = min_terrain_velocity

@@ -7,6 +7,8 @@ extends CharacterBody3D
 @export var currentHealth = maxHealth
 @onready var leftNearMiss = $MeshInstance3D/LeftNearMiss
 @onready var rightNearMiss = $MeshInstance3D/RightNearMiss
+@onready var nearMissTimer = $NearMissTimer
+@onready var boostTimer = $BoostTimer
 
 var isBoosting = false
 
@@ -23,7 +25,6 @@ func _physics_process(_delta: float) -> void:
 
 func handle_movement():
 	var input_dir := Input.get_vector("move_left", "move_right", "ui_up", "ui_down")
-	# We'll ignore up and down input, just using side to side
 	var direction := (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
 	if direction:
 		velocity.x = direction.x * speed
@@ -34,35 +35,35 @@ func handle_movement():
 func handle_collision():
 	var collision = get_last_slide_collision()
 	if collision:
-		print("Collided with: ", collision.get_collider())
 		collision.get_collider().queue_free()
 		currentHealth -= 1
-		healthChanged.emit()
-		print("health: ",currentHealth)
 		if currentHealth <= 0:
 			get_tree().quit()
 		if currentBoost > 0:
 			currentBoost = max(currentBoost - 2, 0)
-			print("Cur boost: ", currentBoost)
+		if isBoosting:
+			isBoosting = false
+		healthChanged.emit()
 
 func handle_boost():
-	if Input.is_action_just_pressed("boost"):
-		print("boost outer")
+	if isBoosting:
+		currentBoost = round(boostTimer.time_left)
+	if Input.is_action_just_pressed("boost") and !isBoosting:
 		if currentBoost > 0:
-			print("boost")
-			$BoostTimer.wait_time = currentBoost
-			$BoostTimer.start()
+			boostTimer.wait_time = currentBoost
+			boostTimer.start()
 			isBoosting = true
 			startBoost.emit()
-	if (Input.is_action_just_released("boost") or $BoostTimer.time_left == 0) and isBoosting:
+	if (Input.is_action_just_released("boost") or boostTimer.time_left == 0) and isBoosting:
 		isBoosting = false
-		currentBoost = 0
+		currentBoost = round(boostTimer.time_left)
 		stopBoost.emit()
 
 func handle_near_miss():
-	if (leftNearMiss.is_colliding() or rightNearMiss.is_colliding()) and $NearMissTimer.time_left == 0:
+	if (leftNearMiss.is_colliding() or rightNearMiss.is_colliding()) and nearMissTimer.time_left == 0:
 		if currentBoost < maxBoost:
 			currentBoost += 1
-			print("Cur boost: ", currentBoost)
-		$NearMissTimer.start()
+		if isBoosting:
+			boostTimer.start(boostTimer.time_left + 1.0)  
+		nearMissTimer.start()
 		nearMiss.emit()
