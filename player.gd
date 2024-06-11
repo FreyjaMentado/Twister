@@ -5,14 +5,14 @@ extends CharacterBody3D
 @export var currentBoost = 0
 @export var maxHealth = 5
 @export var currentHealth = maxHealth
-@onready var leftNearMiss = $MeshInstance3D/LeftNearMiss
-@onready var rightNearMiss = $MeshInstance3D/RightNearMiss
+@onready var NearMissBox = $MeshInstance3D/NearMissBox
 @onready var nearMissTimer = $NearMissTimer
 @onready var boostTimer = $BoostTimer
 
 var isBoosting = false
 
-signal healthChanged
+signal healthDecreased
+signal healthIncreased
 signal nearMiss
 signal startBoost
 signal stopBoost
@@ -35,15 +35,19 @@ func handle_movement():
 func handle_collision():
 	var collision = get_last_slide_collision()
 	if collision:
+		if collision.get_collider().is_in_group("wrench"):
+			currentHealth = min(currentHealth + 1, maxHealth)
+			healthIncreased.emit()
+		else:
+			currentHealth -= 1
+			healthDecreased.emit()
 		collision.get_collider().queue_free()
-		currentHealth -= 1
 		if currentHealth <= 0:
 			get_tree().quit()
 		if currentBoost > 0:
 			currentBoost = max(currentBoost - 2, 0)
 		if isBoosting:
 			isBoosting = false
-		healthChanged.emit()
 
 func handle_boost():
 	if isBoosting:
@@ -60,10 +64,14 @@ func handle_boost():
 		stopBoost.emit()
 
 func handle_near_miss():
-	if (leftNearMiss.is_colliding() or rightNearMiss.is_colliding()) and nearMissTimer.time_left == 0:
+	if NearMissBox.has_overlapping_bodies() and nearMissTimer.time_left == 0:
 		if currentBoost < maxBoost:
 			currentBoost += 1
 		if isBoosting:
 			boostTimer.start(boostTimer.time_left + 1.0)  
 		nearMissTimer.start()
 		nearMiss.emit()
+
+func _on_near_miss_box_area_entered(area):
+	if area.is_in_group("tornado"):
+		get_tree().quit()

@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://dgbvee2hvq4u6"]
+[gd_scene load_steps=7 format=3 uid="uid://dgbvee2hvq4u6"]
 
 [ext_resource type="Script" path="res://player.gd" id="1_5xmnu"]
 
@@ -12,6 +12,11 @@ albedo_color = Color(1, 0, 0, 1)
 material = SubResource("StandardMaterial3D_8nls8")
 size = Vector3(2, 1, 3)
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_8uro5"]
+size = Vector3(3.5, 1, 1)
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_76u33"]
+
 [node name="Player" type="CharacterBody3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.08165e-12, 1.1, 2.08165e-12)
 script = ExtResource("1_5xmnu")
@@ -22,24 +27,26 @@ shape = SubResource("BoxShape3D_e648t")
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 mesh = SubResource("BoxMesh_ncmnk")
 
-[node name="RightNearMiss" type="RayCast3D" parent="MeshInstance3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.25, 0)
-target_position = Vector3(2, 0, 0)
+[node name="NearMissBox" type="Area3D" parent="MeshInstance3D"]
+collision_layer = 2
 collision_mask = 2
 
-[node name="LeftNearMiss" type="RayCast3D" parent="MeshInstance3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.25, 0)
-target_position = Vector3(-2, 0, 0)
-collision_mask = 2
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D/NearMissBox"]
+shape = SubResource("BoxShape3D_8uro5")
 
-[node name="Camera3D" type="Camera3D" parent="."]
+[node name="SpringArm3D" type="SpringArm3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.939693, 0.34202, 0, -0.34202, 0.939693, 0, 3.08136, 3.69015)
+shape = SubResource("SphereShape3D_76u33")
+
+[node name="Camera3D" type="Camera3D" parent="SpringArm3D"]
 fov = 85.0
 far = 60.0
 
 [node name="NearMissTimer" type="Timer" parent="."]
-wait_time = 0.2
+wait_time = 0.4
 one_shot = true
 
 [node name="BoostTimer" type="Timer" parent="."]
 one_shot = true
+
+[connection signal="area_entered" from="MeshInstance3D/NearMissBox" to="." method="_on_near_miss_box_area_entered"]

@@ -6,12 +6,12 @@ extends TextureProgressBar
 func _ready():
 	player.nearMiss.connect(update)
 	player.stopBoost.connect(update)
-	player.healthChanged.connect(update)
+	player.healthDecreased.connect(update)
 
 func update():
 	value = player.currentBoost * 100 / player.maxBoost
 
-func _physics_process(delta):
+func _physics_process(_delta):
 	boosting()
 
 func boosting():

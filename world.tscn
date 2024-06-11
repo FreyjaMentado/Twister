@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://b4tyw6wf7gjuf"]
+[gd_scene load_steps=15 format=3 uid="uid://b4tyw6wf7gjuf"]
 
 [ext_resource type="PackedScene" uid="uid://dgbvee2hvq4u6" path="res://player.tscn" id="1_vgjmf"]
 [ext_resource type="PackedScene" uid="uid://odgtnpypykcy" path="res://terrain_controller.tscn" id="1_wvryj"]
@@ -21,6 +21,17 @@ background_mode = 2
 sky = SubResource("Sky_clgfu")
 tonemap_mode = 2
 glow_enabled = true
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_wwkmv"]
+size = Vector3(30, 10, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4ucnt"]
+transparency = 1
+albedo_color = Color(0.352941, 0.352941, 0.352941, 0.870588)
+
+[sub_resource type="BoxMesh" id="BoxMesh_vqou0"]
+material = SubResource("StandardMaterial3D_4ucnt")
+size = Vector3(30, 10, 1)
 
 [node name="World" type="Node3D"]
 
@@ -59,3 +70,14 @@ texture_progress = ExtResource("7_kdvep")
 texture_progress_offset = Vector2(16, 0)
 script = ExtResource("8_im8it")
 player = NodePath("../../Player")
+
+[node name="Tornado" type="Area3D" parent="." groups=["tornado"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, -55)
+collision_layer = 2
+collision_mask = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Tornado" groups=["tornado"]]
+shape = SubResource("BoxShape3D_wwkmv")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Tornado" groups=["tornado"]]
+mesh = SubResource("BoxMesh_vqou0")

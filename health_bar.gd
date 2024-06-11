@@ -4,7 +4,8 @@ extends TextureProgressBar
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	player.healthChanged.connect(update)
+	player.healthDecreased.connect(update)
+	player.healthIncreased.connect(update)
 	update()
 
 func update():
