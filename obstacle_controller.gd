@@ -16,5 +16,4 @@ func _on_obstacle_timer_timeout():
 	var x = randi_range(-10,10)
 	projCopy.apply_central_impulse(Vector3(x, 0, z))
 	var time = randf_range(.2,1.5)
-	print(time)
 	$ObstacleTimer.start(time)

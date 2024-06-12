@@ -9,6 +9,7 @@ var terrain_belt: Array[MeshInstance3D] = []
 @export var min_terrain_velocity: float = 10.0
 @export var terrain_acceleration: float = 1.0
 @export var current_tornado_velocity: float = .01
+@export var max_tornado_boost_velocity: float = .05
 @export var max_tornado_velocity: float = .03
 @export var min_tornado_velocity: float = .01
 @export var tornado_acceleration: float = .001
@@ -60,8 +61,12 @@ func _progress_terrain(delta: float) -> void:
 		first_terrain.queue_free()
 
 func _progress_tornado(delta):
-	current_tornado_velocity = move_toward(current_tornado_velocity, max_tornado_velocity, tornado_acceleration * delta)
-	tornado.position.z += current_tornado_velocity
+	if player.isBoosting:
+		current_tornado_velocity = move_toward(current_tornado_velocity, max_tornado_boost_velocity, tornado_acceleration * delta)
+		tornado.position.z += current_tornado_velocity
+	else:
+		current_tornado_velocity = move_toward(current_tornado_velocity, max_tornado_velocity, tornado_acceleration * delta)
+		tornado.position.z += current_tornado_velocity
 
 func _append_to_far_edge(target_block: MeshInstance3D, appending_block: MeshInstance3D) -> void:
 	appending_block.position.z = target_block.position.z - target_block.mesh.size.y/2 - appending_block.mesh.size.y/2
