@@ -1,6 +1,7 @@
-[gd_scene load_steps=7 format=3 uid="uid://dgbvee2hvq4u6"]
+[gd_scene load_steps=8 format=3 uid="uid://dgbvee2hvq4u6"]
 
 [ext_resource type="Script" path="res://player.gd" id="1_5xmnu"]
+[ext_resource type="AudioStream" uid="uid://c4d0dmtrqkntw" path="res://sfx/truck_accelerate.mp3" id="2_2lwrx"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_e648t"]
 size = Vector3(2, 1, 3)
@@ -50,4 +51,14 @@ one_shot = true
 [node name="BoostTimer" type="Timer" parent="."]
 one_shot = true
 
+[node name="EngineSFX" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("2_2lwrx")
+volume_db = -10.0
+max_db = 6.0
+autoplay = true
+
+[node name="Collision" type="AudioStreamPlayer3D" parent="."]
+
 [connection signal="area_entered" from="MeshInstance3D/NearMissBox" to="." method="_on_near_miss_box_area_entered"]
+[connection signal="finished" from="EngineSFX" to="." method="_on_engine_sfx_finished"]
+[connection signal="finished" from="Collision" to="." method="_on_collision_finished"]

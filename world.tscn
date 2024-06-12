@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://b4tyw6wf7gjuf"]
+[gd_scene load_steps=17 format=3 uid="uid://b4tyw6wf7gjuf"]
 
 [ext_resource type="PackedScene" uid="uid://dgbvee2hvq4u6" path="res://player.tscn" id="1_vgjmf"]
 [ext_resource type="PackedScene" uid="uid://odgtnpypykcy" path="res://terrain_controller.tscn" id="1_wvryj"]
@@ -9,6 +9,7 @@
 [ext_resource type="Texture2D" uid="uid://dfwi24bxse1kq" path="res://art/bluebar-under-export.png" id="6_wcv2x"]
 [ext_resource type="Texture2D" uid="uid://c6uojb4opkhb8" path="res://art/bluebar-progress-export.png" id="7_kdvep"]
 [ext_resource type="Script" path="res://boost_bar.gd" id="8_im8it"]
+[ext_resource type="AudioStream" uid="uid://b1pwrk3ohg4a4" path="res://sfx/heavy-rain-daniel_simon.wav" id="10_rqwcw"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_om122"]
 sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
@@ -90,5 +91,9 @@ shape = SubResource("BoxShape3D_wwkmv")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Tornado" groups=["tornado"]]
 mesh = SubResource("BoxMesh_vqou0")
+
+[node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="Tornado"]
+stream = ExtResource("10_rqwcw")
+autoplay = true
 
 [connection signal="timeout" from="ObstacleController/ObstacleTimer" to="ObstacleController" method="_on_obstacle_timer_timeout"]

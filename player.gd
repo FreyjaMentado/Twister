@@ -8,6 +8,7 @@ extends CharacterBody3D
 @onready var NearMissBox = $MeshInstance3D/NearMissBox
 @onready var nearMissTimer = $NearMissTimer
 @onready var boostTimer = $BoostTimer
+@onready var collisionSFX = $Collision
 
 var isBoosting = false
 
@@ -41,6 +42,8 @@ func handle_collision():
 		else:
 			currentHealth -= 1
 			healthDecreased.emit()
+			collisionSFX.stream = load("res://sfx/box/wood-smash-1-170410.mp3")
+			collisionSFX.play()
 		collision.get_collider().queue_free()
 		if currentHealth <= 0:
 			get_tree().quit()
@@ -75,3 +78,11 @@ func handle_near_miss():
 func _on_near_miss_box_area_entered(area):
 	if area.is_in_group("tornado"):
 		get_tree().quit()
+
+func _on_engine_sfx_finished():
+	$EngineSFX.set_volume_db(min($EngineSFX.volume_db + 5, 6))
+	if $EngineSFX.volume_db == 6:
+		$EngineSFX.stream = load("res://sfx/truckMaxSpeed.ogg")
+		
+	else:
+		$EngineSFX.play()
