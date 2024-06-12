@@ -22,7 +22,6 @@ func _ready() -> void:
 	_load_terrain_scenes(terrian_blocks_path)
 	_init_blocks(num_terrain_blocks)
 	player.startBoost.connect(start_boost)
-	player.startBoost.connect(catch_tornado)
 	player.stopBoost.connect(stop_boost)
 	player.stopBoost.connect(lose_tornado)
 	player.healthDecreased.connect(reset_speed)
@@ -53,7 +52,6 @@ func _progress_terrain(delta: float) -> void:
 	if terrain_belt[0].position.z >= terrain_belt[0].mesh.size.y:
 		var last_terrain = terrain_belt[-1]
 		var first_terrain = terrain_belt.pop_front()
-
 		var block = TerrainBlocks.pick_random().instantiate()
 		_append_to_far_edge(last_terrain, block)
 		add_child(block)
@@ -63,10 +61,9 @@ func _progress_terrain(delta: float) -> void:
 func _progress_tornado(delta):
 	if player.isBoosting:
 		current_tornado_velocity = move_toward(current_tornado_velocity, max_tornado_boost_velocity, tornado_acceleration * delta)
-		tornado.position.z += current_tornado_velocity
 	else:
 		current_tornado_velocity = move_toward(current_tornado_velocity, max_tornado_velocity, tornado_acceleration * delta)
-		tornado.position.z += current_tornado_velocity
+	tornado.position.z += current_tornado_velocity
 
 func _append_to_far_edge(target_block: MeshInstance3D, appending_block: MeshInstance3D) -> void:
 	appending_block.position.z = target_block.position.z - target_block.mesh.size.y/2 - appending_block.mesh.size.y/2
@@ -88,8 +85,6 @@ func reset_speed():
 	if current_terrain_velocity > min_terrain_velocity:
 		current_terrain_velocity = min_terrain_velocity
 
-func catch_tornado():
-	current_tornado_velocity = min(current_tornado_velocity + .01, max_tornado_velocity)
-
 func lose_tornado():
 	current_tornado_velocity = max(current_tornado_velocity - .01, min_tornado_velocity)
+	tornado.position.z -= current_tornado_velocity
