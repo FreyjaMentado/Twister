@@ -9,8 +9,10 @@ extends CharacterBody3D
 @onready var nearMissTimer = $NearMissTimer
 @onready var boostTimer = $BoostTimer
 @onready var collisionSFX = $Collision
+@onready var maxSpeedSFX = preload("res://sfx/truckMaxSpeed.ogg")
 
 var isBoosting = false
+var isMaxSpeed = false
 
 signal healthDecreased
 signal healthIncreased
@@ -80,9 +82,11 @@ func _on_near_miss_box_area_entered(area):
 		get_tree().quit()
 
 func _on_engine_sfx_finished():
-	$EngineSFX.set_volume_db(min($EngineSFX.volume_db + 5, 6))
+	$EngineSFX.set_volume_db(min($EngineSFX.volume_db + 3, 6))
 	if $EngineSFX.volume_db == 6:
-		$EngineSFX.stream = load("res://sfx/truckMaxSpeed.ogg")
-		
+		$EngineSFX.stream = maxSpeedSFX
+		if !isMaxSpeed:
+			$EngineSFX.play()
+			isMaxSpeed = true
 	else:
 		$EngineSFX.play()
