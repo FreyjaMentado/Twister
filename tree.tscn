@@ -1,0 +1,15 @@
+[gd_scene load_steps=3 format=3 uid="uid://dj6lqt33kyh8d"]
+
+[ext_resource type="ArrayMesh" uid="uid://bt5jspks5o650" path="res://art/models/trees/trees9.obj" id="1_ck4se"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_j635k"]
+size = Vector3(5, 24, 4)
+
+[node name="Tree" type="StaticBody3D"]
+
+[node name="Trees9" type="MeshInstance3D" parent="."]
+mesh = ExtResource("1_ck4se")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 12, 0)
+shape = SubResource("BoxShape3D_j635k")

@@ -46,6 +46,8 @@ func handle_collision():
 			healthDecreased.emit()
 			collisionSFX.stream = load("res://sfx/box/wood-smash-1-170410.mp3")
 			collisionSFX.play()
+			$EngineSFX.set_volume_db(-6)
+			$EngineSFX.play()
 		collision.get_collider().queue_free()
 		if currentHealth <= 0:
 			get_tree().quit()
