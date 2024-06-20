@@ -26,6 +26,13 @@ func _physics_process(_delta: float) -> void:
 	handle_collision()
 	handle_near_miss()
 	handle_boost()
+	handle_position()
+
+func handle_position():
+	if position.y != .65:
+		position.y = .65
+	if position.z != 0.0:
+		position.z = 0.0
 
 func handle_movement():
 	var input_dir := Input.get_vector("move_left", "move_right", "ui_up", "ui_down")
