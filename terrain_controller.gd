@@ -69,10 +69,9 @@ func _append_to_far_edge(target_block: MeshInstance3D, appending_block: MeshInst
 	appending_block.position.z = target_block.position.z - target_block.mesh.size.y/2 - appending_block.mesh.size.y/2
 
 func _load_terrain_scenes(target_path: String) -> void:
-	var dir = DirAccess.open(target_path)
-	for scene_path in dir.get_files():
-		print("Loading terrian block scene: " + target_path + "/" + scene_path)
-		TerrainBlocks.append(load(target_path + "/" + scene_path))
+	var files = GGResourceFinder.find(target_path, ".tscn")
+	for scene_path in files:
+		TerrainBlocks.append(load(scene_path))
 
 func start_boost():
 	if current_terrain_velocity < max_boost_velocity:
