@@ -2,13 +2,6 @@ extends Node3D
 
 var projectile = preload("res://sphere.tscn")
 
-func _ready():
-	pass # Replace with function body.
-
-func _process(delta):
-	pass
-
-
 func _on_obstacle_timer_timeout():
 	var projCopy = projectile.instantiate()
 	add_child(projCopy)

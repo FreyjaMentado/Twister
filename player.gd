@@ -10,6 +10,7 @@ extends CharacterBody3D
 @onready var boostTimer = $BoostTimer
 @onready var collisionSFX = $Collision
 @onready var maxSpeedSFX = preload("res://sfx/truckMaxSpeed.ogg")
+@onready var accelSFX = preload("res://sfx/truck_accelerate.ogg")
 
 var isBoosting = false
 var isMaxSpeed = false
@@ -47,10 +48,12 @@ func handle_collision():
 			collisionSFX.stream = load("res://sfx/box/wood-smash-1-170410.mp3")
 			collisionSFX.play()
 			$EngineSFX.set_volume_db(-6)
+			$EngineSFX.stream = accelSFX
+			isMaxSpeed = false
 			$EngineSFX.play()
 		collision.get_collider().queue_free()
 		if currentHealth <= 0:
-			get_tree().quit()
+			SceneSwitcher.switch_scene("res://endScreen/score_menu.tscn")
 		if currentBoost > 0:
 			currentBoost = max(currentBoost - 2, 0)
 		if isBoosting:
@@ -73,7 +76,7 @@ func handle_boost():
 func handle_near_miss():
 	if NearMissBox.has_overlapping_bodies() and nearMissTimer.time_left == 0:
 		if currentBoost < maxBoost:
-			currentBoost += 1
+			currentBoost = min(currentBoost + 1, maxBoost)
 		if isBoosting:
 			boostTimer.start(boostTimer.time_left + 1.0)  
 		nearMissTimer.start()
@@ -81,7 +84,7 @@ func handle_near_miss():
 
 func _on_near_miss_box_area_entered(area):
 	if area.is_in_group("tornado"):
-		get_tree().quit()
+		SceneSwitcher.switch_scene("res://endScreen/score_menu.tscn")
 
 func _on_engine_sfx_finished():
 	$EngineSFX.set_volume_db(min($EngineSFX.volume_db + 3, 6))

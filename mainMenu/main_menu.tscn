@@ -1,0 +1,42 @@
+[gd_scene load_steps=2 format=3 uid="uid://bd20kp0fhcc02"]
+
+[ext_resource type="Script" path="res://mainMenu/main_menu.gd" id="1_e7gis"]
+
+[node name="MainMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_e7gis")
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 0
+offset_left = 471.0
+offset_top = 234.0
+offset_right = 776.0
+offset_bottom = 344.0
+theme_override_font_sizes/font_size = 80
+text = "Twister!"
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 0
+offset_left = 529.0
+offset_top = 365.0
+offset_right = 729.0
+offset_bottom = 465.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="Play" type="Button" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Play"
+
+[node name="Quit" type="Button" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Quit"
+
+[connection signal="pressed" from="MarginContainer/VBoxContainer/Play" to="." method="_on_play_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/Quit" to="." method="_on_quit_pressed"]

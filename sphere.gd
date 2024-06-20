@@ -6,7 +6,7 @@ func _ready():
 	add_constant_central_force(Vector3(0,0,10))
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
+func _process(_delta):
 	if position.z < -5:
 		queue_free()
 
