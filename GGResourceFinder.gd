@@ -1,5 +1,5 @@
 class_name GGResourceFinder
-extends RefCounted
+extends Node
 
 ## Iterates over files in a directory
 ## making it easy to load contents from disk at run-time.

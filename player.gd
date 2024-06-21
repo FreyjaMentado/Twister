@@ -75,6 +75,7 @@ func handle_boost():
 			boostTimer.start()
 			isBoosting = true
 			startBoost.emit()
+			$EngineSFX.set_volume_db(min($EngineSFX.volume_db + 3, 6))
 	if (Input.is_action_just_released("boost") or boostTimer.time_left == 0) and isBoosting:
 		isBoosting = false
 		currentBoost = round(boostTimer.time_left)
